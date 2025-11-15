@@ -1,0 +1,13 @@
+// Builder-specific styles if needed
+.components-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-container {
+  min-height: 100%;
+}
+
+.component-preview {
+  user-select: none;
+}
