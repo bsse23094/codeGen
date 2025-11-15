@@ -1,0 +1,28 @@
+<!-- Logo Cloud Template -->
+<section class="logo-cloud section" style="padding: 5rem 0;">
+  <div class="container">
+    {{#if heading}}
+    <h2 style="text-align: center; font-size: 1.5rem; font-weight: 600; color: var(--color-muted); margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 0.1em; animation: fadeInUp 0.6s ease-out;">{{heading}}</h2>
+    {{/if}}
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3rem; align-items: center; justify-items: center;">
+      {{#each logos}}
+      <div style="opacity: 0.6; transition: opacity 0.3s, transform 0.3s; animation: fadeIn 0.6s ease-out; animation-delay: calc({{@index}} * 0.1s); animation-fill-mode: both;">
+        <img src="{{url}}" alt="{{name}}" style="max-width: 120px; height: auto; filter: grayscale(100%); transition: filter 0.3s;">
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<style>
+.logo-cloud img:hover {
+  filter: grayscale(0%) !important;
+  opacity: 1 !important;
+}
+
+.logo-cloud > div > div:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+</style>

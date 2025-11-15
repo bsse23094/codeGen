@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { BuilderStateService } from '../core/services/builder-state.service';
 import { ThemeService } from '../core/services/theme.service';
 import { ComponentRegistryService } from '../core/services/component-registry.service';
@@ -10,7 +11,7 @@ import { ThemeEditorComponent } from '../shared/theme-editor.component';
 
 @Component({
   selector: 'app-builder',
-  imports: [CommonModule, InspectorComponent, ThemeEditorComponent],
+  imports: [CommonModule, DragDropModule, InspectorComponent, ThemeEditorComponent],
   templateUrl: './builder.component.html',
   styleUrl: './builder.component.scss'
 })
@@ -35,7 +36,7 @@ export class BuilderComponent implements OnInit {
   }
 
   // Top bar actions
-  async onExport() {
+  async onExportHTML() {
     const project = this.builderState.project();
     if (!project) {
       alert('No project to export');
@@ -45,9 +46,28 @@ export class BuilderComponent implements OnInit {
     this.isExporting.set(true);
     try {
       await this.exportService.exportAsHTML(project);
-      console.log('Export successful!');
+      console.log('HTML export successful!');
     } catch (error) {
-      console.error('Export failed:', error);
+      console.error('HTML export failed:', error);
+      alert('Export failed. Check console for details.');
+    } finally {
+      this.isExporting.set(false);
+    }
+  }
+
+  async onExportReact() {
+    const project = this.builderState.project();
+    if (!project) {
+      alert('No project to export');
+      return;
+    }
+
+    this.isExporting.set(true);
+    try {
+      await this.exportService.exportAsReact(project);
+      console.log('React export successful!');
+    } catch (error) {
+      console.error('React export failed:', error);
       alert('Export failed. Check console for details.');
     } finally {
       this.isExporting.set(false);
@@ -55,7 +75,24 @@ export class BuilderComponent implements OnInit {
   }
 
   onPreview() {
-    console.log('Preview clicked');
+    const project = this.builderState.project();
+    if (!project) {
+      alert('No project to preview');
+      return;
+    }
+
+    // Generate preview HTML
+    this.exportService.generatePreviewHTML(project).then((html: string) => {
+      // Open preview in new window
+      const previewWindow = window.open('', '_blank', 'width=1200,height=800');
+      if (previewWindow) {
+        previewWindow.document.write(html);
+        previewWindow.document.close();
+      }
+    }).catch((error: any) => {
+      console.error('Preview failed:', error);
+      alert('Preview failed. Check console for details.');
+    });
   }
 
   onSettings() {
@@ -87,6 +124,13 @@ export class BuilderComponent implements OnInit {
 
   onDeleteComponent(componentId: string) {
     this.builderState.removeComponent(componentId);
+  }
+
+  // Drag and drop
+  onComponentDrop(event: CdkDragDrop<string[]>) {
+    if (event.previousIndex !== event.currentIndex) {
+      this.builderState.reorderComponents(event.previousIndex, event.currentIndex);
+    }
   }
 
   // Search and filter

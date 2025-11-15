@@ -141,18 +141,24 @@ export class ComponentRegistryService {
       defaultProps: {
         logo: 'MyApp',
         logoHref: '/',
-        links: [
-          { text: 'Features', href: '#features' },
-          { text: 'Pricing', href: '#pricing' },
-          { text: 'About', href: '#about' }
-        ],
+        link1Text: 'Features',
+        link1Href: '#features',
+        link2Text: 'Pricing',
+        link2Href: '#pricing',
+        link3Text: 'About',
+        link3Href: '#about',
         ctaText: 'Get Started',
         ctaHref: '#'
       },
       inputs: [
         { key: 'logo', type: 'text', label: 'Logo Text' },
         { key: 'logoHref', type: 'text', label: 'Logo Link' },
-        { key: 'links', type: 'textarea', label: 'Nav Links (JSON)', helperText: 'Array of {text, href}' },
+        { key: 'link1Text', type: 'text', label: 'Link 1 Text' },
+        { key: 'link1Href', type: 'text', label: 'Link 1 URL' },
+        { key: 'link2Text', type: 'text', label: 'Link 2 Text' },
+        { key: 'link2Href', type: 'text', label: 'Link 2 URL' },
+        { key: 'link3Text', type: 'text', label: 'Link 3 Text' },
+        { key: 'link3Href', type: 'text', label: 'Link 3 URL' },
         { key: 'ctaText', type: 'text', label: 'CTA Button Text' },
         { key: 'ctaHref', type: 'text', label: 'CTA Button Link' }
       ]
@@ -246,6 +252,173 @@ export class ComponentRegistryService {
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
         { key: 'items', type: 'textarea', label: 'FAQ Items (JSON)', helperText: 'Array of {question, answer}' }
+      ]
+    },
+
+    // CTA Components
+    {
+      type: 'cta-simple',
+      label: 'CTA Banner',
+      icon: 'campaign',
+      category: 'CTA',
+      defaultProps: {
+        heading: 'Ready to get started?',
+        subheading: 'Join thousands of satisfied customers today',
+        buttonText: 'Start Free Trial',
+        buttonHref: '#'
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'subheading', type: 'textarea', label: 'Subheading' },
+        { key: 'buttonText', type: 'text', label: 'Button Text' },
+        { key: 'buttonHref', type: 'text', label: 'Button Link' }
+      ]
+    },
+
+    {
+      type: 'cta-split',
+      label: 'CTA Split',
+      icon: 'call_to_action',
+      category: 'CTA',
+      defaultProps: {
+        heading: 'Take your business to the next level',
+        description: 'Get started with our platform today and see the difference',
+        primaryButtonText: 'Get Started',
+        primaryButtonHref: '#',
+        secondaryButtonText: 'Learn More',
+        secondaryButtonHref: '#'
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'description', type: 'textarea', label: 'Description' },
+        { key: 'primaryButtonText', type: 'text', label: 'Primary Button Text' },
+        { key: 'primaryButtonHref', type: 'text', label: 'Primary Button Link' },
+        { key: 'secondaryButtonText', type: 'text', label: 'Secondary Button Text' },
+        { key: 'secondaryButtonHref', type: 'text', label: 'Secondary Button Link' }
+      ]
+    },
+
+    // Testimonials
+    {
+      type: 'testimonials-grid',
+      label: 'Testimonials Grid',
+      icon: 'format_quote',
+      category: 'Social Proof',
+      defaultProps: {
+        heading: 'What Our Customers Say',
+        subheading: 'Don\'t just take our word for it',
+        testimonials: [
+          {
+            quote: 'This product has completely transformed how we work. Highly recommended!',
+            author: 'Sarah Johnson',
+            role: 'CEO, TechCorp',
+            avatar: 'https://i.pravatar.cc/150?img=1'
+          },
+          {
+            quote: 'The best investment we\'ve made this year. ROI was immediate.',
+            author: 'Michael Chen',
+            role: 'Founder, StartupXYZ',
+            avatar: 'https://i.pravatar.cc/150?img=2'
+          },
+          {
+            quote: 'Outstanding support and amazing features. Love it!',
+            author: 'Emily Davis',
+            role: 'Product Manager, BigCo',
+            avatar: 'https://i.pravatar.cc/150?img=3'
+          }
+        ]
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'subheading', type: 'textarea', label: 'Subheading' },
+        { key: 'testimonials', type: 'textarea', label: 'Testimonials (JSON)', helperText: 'Array of {quote, author, role, avatar}' }
+      ]
+    },
+
+    // Stats
+    {
+      type: 'stats-simple',
+      label: 'Stats Counter',
+      icon: 'query_stats',
+      category: 'Social Proof',
+      defaultProps: {
+        heading: 'Trusted by thousands',
+        stats: [
+          { value: '10K+', label: 'Active Users' },
+          { value: '50K+', label: 'Projects Created' },
+          { value: '99.9%', label: 'Uptime' },
+          { value: '24/7', label: 'Support' }
+        ]
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'stats', type: 'textarea', label: 'Stats (JSON)', helperText: 'Array of {value, label}' }
+      ]
+    },
+
+    // Logo Cloud
+    {
+      type: 'logo-cloud',
+      label: 'Logo Cloud',
+      icon: 'business',
+      category: 'Social Proof',
+      defaultProps: {
+        heading: 'Trusted by leading companies',
+        logos: [
+          { name: 'Company 1', url: 'https://via.placeholder.com/120x40?text=Logo+1' },
+          { name: 'Company 2', url: 'https://via.placeholder.com/120x40?text=Logo+2' },
+          { name: 'Company 3', url: 'https://via.placeholder.com/120x40?text=Logo+3' },
+          { name: 'Company 4', url: 'https://via.placeholder.com/120x40?text=Logo+4' },
+          { name: 'Company 5', url: 'https://via.placeholder.com/120x40?text=Logo+5' },
+          { name: 'Company 6', url: 'https://via.placeholder.com/120x40?text=Logo+6' }
+        ]
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'logos', type: 'textarea', label: 'Logos (JSON)', helperText: 'Array of {name, url}' }
+      ]
+    },
+
+    // Content
+    {
+      type: 'content-image-left',
+      label: 'Content Image Left',
+      icon: 'article',
+      category: 'Content',
+      defaultProps: {
+        heading: 'Build faster with our platform',
+        description: 'Our intuitive drag-and-drop interface makes it easy to create beautiful landing pages without any coding knowledge.',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
+        buttonText: 'Learn More',
+        buttonHref: '#'
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'description', type: 'textarea', label: 'Description' },
+        { key: 'imageUrl', type: 'image', label: 'Image URL' },
+        { key: 'buttonText', type: 'text', label: 'Button Text' },
+        { key: 'buttonHref', type: 'text', label: 'Button Link' }
+      ]
+    },
+
+    {
+      type: 'content-image-right',
+      label: 'Content Image Right',
+      icon: 'article',
+      category: 'Content',
+      defaultProps: {
+        heading: 'Powerful features for everyone',
+        description: 'Everything you need to create, manage, and optimize your landing pages in one place.',
+        imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+        buttonText: 'Get Started',
+        buttonHref: '#'
+      },
+      inputs: [
+        { key: 'heading', type: 'text', label: 'Heading' },
+        { key: 'description', type: 'textarea', label: 'Description' },
+        { key: 'imageUrl', type: 'image', label: 'Image URL' },
+        { key: 'buttonText', type: 'text', label: 'Button Text' },
+        { key: 'buttonHref', type: 'text', label: 'Button Link' }
       ]
     }
   ];

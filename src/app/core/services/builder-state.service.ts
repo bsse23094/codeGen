@@ -24,6 +24,7 @@ export class BuilderStateService {
   // History stacks for undo/redo
   private history: ProjectConfig[] = [];
   private historyIndex = -1;
+  private isRestoringFromHistory = false;
 
   // Public computed signals
   project = this.projectSignal.asReadonly();
@@ -176,9 +177,11 @@ export class BuilderStateService {
   undo() {
     if (!this.canUndo()) return;
     
+    this.isRestoringFromHistory = true;
     this.historyIndex--;
     const previousState = this.history[this.historyIndex];
     this.projectSignal.set(JSON.parse(JSON.stringify(previousState)));
+    this.isRestoringFromHistory = false;
   }
 
   /**
@@ -187,9 +190,11 @@ export class BuilderStateService {
   redo() {
     if (!this.canRedo()) return;
     
+    this.isRestoringFromHistory = true;
     this.historyIndex++;
     const nextState = this.history[this.historyIndex];
     this.projectSignal.set(JSON.parse(JSON.stringify(nextState)));
+    this.isRestoringFromHistory = false;
   }
 
   // Private helper methods
@@ -250,7 +255,7 @@ export class BuilderStateService {
 
   private saveToHistory() {
     const project = this.projectSignal();
-    if (!project) return;
+    if (!project || this.isRestoringFromHistory) return;
 
     // Remove any future history if we're not at the end
     if (this.historyIndex < this.history.length - 1) {

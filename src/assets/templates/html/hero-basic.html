@@ -1,15 +1,40 @@
 <!-- Hero Basic Template -->
-<section class="hero hero-basic">
-  <div class="container">
-    <h1>{{title}}</h1>
-    <p class="subtitle">{{subtitle}}</p>
-    <div class="hero-actions">
-      {{#if primaryButtonText}}
-      <a href="{{primaryButtonHref}}" class="btn btn-primary">{{primaryButtonText}}</a>
-      {{/if}}
-      {{#if secondaryButtonText}}
-      <a href="{{secondaryButtonHref}}" class="btn btn-secondary">{{secondaryButtonText}}</a>
-      {{/if}}
+<section class="hero hero-basic" style="padding: 8rem 0; position: relative; overflow: hidden;">
+  <!-- Background Elements -->
+  <div style="position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent); border-radius: 50%; filter: blur(100px); animation: float 6s ease-in-out infinite;"></div>
+  <div style="position: absolute; bottom: -30%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99, 102, 241, 0.1), transparent); border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite reverse;"></div>
+  
+  <div class="container" style="position: relative; z-index: 1;">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center; animation: fadeInUp 0.8s ease-out;">
+      <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(135deg, var(--color-text), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.02em;">{{title}}</h1>
+      <p class="subtitle" style="font-size: 1.25rem; color: var(--color-muted); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.6; animation: fadeInUp 0.8s ease-out 0.2s both;">{{subtitle}}</p>
+      <div class="hero-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeInUp 0.8s ease-out 0.4s both;">
+        {{#if primaryButtonText}}
+        <a href="{{primaryButtonHref}}" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.125rem; font-weight: 600; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3); transition: all 0.3s ease; position: relative; overflow: hidden;">
+          <span style="position: relative; z-index: 1;">{{primaryButtonText}}</span>
+          <span style="position: absolute; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; background: rgba(255,255,255,0.1); transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;"></span>
+        </a>
+        {{/if}}
+        {{#if secondaryButtonText}}
+        <a href="{{secondaryButtonHref}}" class="btn btn-secondary" style="padding: 1rem 2.5rem; font-size: 1.125rem; font-weight: 600; transition: all 0.3s ease;">{{secondaryButtonText}}</a>
+        {{/if}}
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+.btn-primary:hover span:last-child {
+  width: 300px;
+  height: 300px;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+}
+</style>

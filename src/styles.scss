@@ -32,8 +32,8 @@
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   
   /* Typography */
-  --font-heading: 'DM Sans', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Lexend', system-ui, -apple-system, sans-serif;
+  --font-body: 'Lexend', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Consolas', monospace;
   
   /* Font Sizes */
@@ -57,6 +57,68 @@
 }
 
 /* ===========================
+   Keyframe Animations
+   =========================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* ===========================
    Theme Variants
    =========================== */
 body.theme-startup {
@@ -68,8 +130,8 @@ body.theme-startup {
   --color-muted: #94a3b8;
   --radius-lg: 0.75rem;
   --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.5);
-  --font-heading: 'DM Sans', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Lexend', system-ui, sans-serif;
+  --font-body: 'Lexend', system-ui, sans-serif;
 }
 
 body.theme-retro {
@@ -81,8 +143,8 @@ body.theme-retro {
   --color-muted: #64748b;
   --radius-lg: 0.5rem;
   --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.12);
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-heading: 'Lexend', system-ui, sans-serif;
+  --font-body: 'Lexend', system-ui, sans-serif;
 }
 
 body.theme-minimal {
@@ -94,8 +156,8 @@ body.theme-minimal {
   --color-muted: #737373;
   --radius-lg: 0.25rem;
   --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --font-heading: 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Lexend', system-ui, sans-serif;
+  --font-body: 'Lexend', system-ui, sans-serif;
 }
 
 /* ===========================
@@ -351,6 +413,7 @@ label {
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
   cursor: pointer;
+  position: relative;
   
   &:hover {
     border-color: rgba(99, 102, 241, 0.3);
@@ -360,6 +423,57 @@ label {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
   }
+}
+
+/* Drag handle styles */
+.drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  
+  .material-symbols-outlined {
+    font-size: 20px;
+    color: var(--color-primary);
+  }
+}
+
+.canvas-component:hover .drag-handle {
+  opacity: 1;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* CDK Drag-Drop visual feedback */
+.cdk-drag-preview {
+  opacity: 0.8;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.components-drop-list.cdk-drop-list-dragging .canvas-component:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* ===========================
@@ -392,5 +506,78 @@ label {
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
+}
+
+/* ===========================
+   Component-Specific Styles
+   =========================== */
+
+/* Navbar Styles */
+.navbar {
+  width: 100%;
+  position: relative;
+  z-index: 100;
+}
+
+.navbar-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
+
+.navbar-brand {
+  flex-shrink: 0;
+}
+
+.navbar-links {
+  flex: 1;
+  max-width: 600px;
+}
+
+/* Pricing Grid Fix */
+.pricing-grid-container,
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 450px;
+}
+
+/* Container Utility */
+.container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Section Spacing */
+.section {
+  padding: 4rem 0;
+  
+  @media (max-width: 768px) {
+    padding: 3rem 0;
+  }
+}
+
+/* Hero Actions */
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 

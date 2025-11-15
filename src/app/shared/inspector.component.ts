@@ -28,26 +28,73 @@ import { ComponentRegistryService } from '../core/services/component-registry.se
                   (input)="updateProp(input.key, $any($event.target).value)"
                   [placeholder]="input.helperText || ''"
                 />
+              } @else if (input.type === 'number') {
+                <input
+                  type="number"
+                  [value]="data.instance.props[input.key] || 0"
+                  (input)="updateProp(input.key, +$any($event.target).value)"
+                  [placeholder]="input.helperText || ''"
+                />
               } @else if (input.type === 'textarea') {
                 <textarea
                   [value]="data.instance.props[input.key] || ''"
                   (input)="updateProp(input.key, $any($event.target).value)"
                   [placeholder]="input.helperText || ''"
+                  rows="4"
                 ></textarea>
-              } @else if (input.type === 'color') {
-                <input
-                  type="color"
-                  [value]="data.instance.props[input.key] || '#000000'"
+              } @else if (input.type === 'richtext') {
+                <textarea
+                  [value]="data.instance.props[input.key] || ''"
                   (input)="updateProp(input.key, $any($event.target).value)"
+                  [placeholder]="input.helperText || ''"
+                  rows="6"
+                  style="font-family: monospace; font-size: var(--text-sm);"
+                ></textarea>
+                <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
+                  Supports basic HTML formatting
+                </div>
+              } @else if (input.type === 'color') {
+                <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                  <input
+                    type="color"
+                    [value]="data.instance.props[input.key] || '#000000'"
+                    (input)="updateProp(input.key, $any($event.target).value)"
+                    style="width: 50px; height: 36px; cursor: pointer;"
+                  />
+                  <input
+                    type="text"
+                    [value]="data.instance.props[input.key] || '#000000'"
+                    (input)="updateProp(input.key, $any($event.target).value)"
+                    style="flex: 1; font-family: monospace;"
+                    placeholder="#000000"
+                  />
+                </div>
+              } @else if (input.type === 'image') {
+                <input
+                  type="url"
+                  [value]="data.instance.props[input.key] || ''"
+                  (input)="updateProp(input.key, $any($event.target).value)"
+                  [placeholder]="input.helperText || 'Enter image URL'"
                 />
+                @if (data.instance.props[input.key]) {
+                  <div style="margin-top: var(--spacing-sm); border-radius: var(--radius-md); overflow: hidden; max-width: 200px;">
+                    <img 
+                      [src]="data.instance.props[input.key]" 
+                      [alt]="input.label"
+                      style="width: 100%; height: auto; display: block;"
+                      (error)="$any($event.target).style.display='none'"
+                    />
+                  </div>
+                }
               } @else if (input.type === 'boolean') {
-                <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;">
+                <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; padding: var(--spacing-sm) 0;">
                   <input
                     type="checkbox"
                     [checked]="data.instance.props[input.key]"
                     (change)="updateProp(input.key, $any($event.target).checked)"
+                    style="width: 18px; height: 18px; cursor: pointer;"
                   />
-                  <span>{{ input.label }}</span>
+                  <span style="font-size: var(--text-sm);">{{ input.label }}</span>
                 </label>
               } @else if (input.type === 'select' && input.options) {
                 <select
@@ -60,7 +107,7 @@ import { ComponentRegistryService } from '../core/services/component-registry.se
                 </select>
               }
 
-              @if (input.helperText && input.type !== 'text' && input.type !== 'textarea') {
+              @if (input.helperText && input.type !== 'text' && input.type !== 'textarea' && input.type !== 'richtext' && input.type !== 'image') {
                 <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
                   {{ input.helperText }}
                 </div>

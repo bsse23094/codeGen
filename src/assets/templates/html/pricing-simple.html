@@ -1,27 +1,36 @@
 <!-- Pricing Simple Template -->
-<section class="pricing-simple section">
+<section class="pricing-simple section" style="padding: 5rem 0; overflow: hidden;">
   <div class="container">
-    <div style="text-align: center; margin-bottom: 3rem;">
-      <h2>{{heading}}</h2>
+    <div style="text-align: center; margin-bottom: 4rem; animation: fadeInUp 0.6s ease-out;">
+      <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(135deg, var(--color-primary), var(--color-text)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{heading}}</h2>
       {{#if subheading}}
-      <p class="subtitle" style="color: var(--color-muted);">{{subheading}}</p>
+      <p class="subtitle" style="color: var(--color-muted); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">{{subheading}}</p>
       {{/if}}
     </div>
-    <div class="pricing-grid">
+    <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto;">
       {{#each plans}}
-      <div class="card pricing-card {{#if highlighted}}pricing-highlighted{{/if}}">
-        <h3>{{name}}</h3>
-        <div class="price">
-          <span style="font-size: 3rem; font-weight: 700;">{{price}}</span>
-          <span style="color: var(--color-muted);">{{period}}</span>
+      <div class="card pricing-card {{#if highlighted}}pricing-highlighted{{/if}}" style="display: flex; flex-direction: column; padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); animation: fadeInUp 0.6s ease-out; animation-delay: calc(var(--index, 0) * 0.1s); animation-fill-mode: both;">
+        {{#if highlighted}}
+        <div style="position: absolute; top: 0; right: 0; background: var(--color-primary); color: white; padding: 0.5rem 1.5rem; font-size: 0.75rem; font-weight: 600; border-bottom-left-radius: 1rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">POPULAR</div>
+        {{/if}}
+        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text);">{{name}}</h3>
+        <div class="price" style="margin: 2rem 0; display: flex; align-items: baseline; gap: 0.5rem;">
+          <span style="font-size: 3.5rem; font-weight: 700; line-height: 1; background: linear-gradient(135deg, var(--color-primary), var(--color-text)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{price}}</span>
+          <span style="color: var(--color-muted); font-size: 1rem;">{{period}}</span>
         </div>
-        <ul class="features-list">
+        <ul class="features-list" style="list-style: none; padding: 0; margin: 1.5rem 0; flex: 1;">
           {{#each features}}
-          <li>{{this}}</li>
+          <li style="padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 0.75rem; transition: padding-left 0.3s ease;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0;">
+              <circle cx="10" cy="10" r="10" fill="var(--color-primary)" opacity="0.1"/>
+              <path d="M6 10L9 13L14 7" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{this}}</span>
+          </li>
           {{/each}}
         </ul>
-        <a href="{{buttonHref}}" class="btn {{#if highlighted}}btn-primary{{else}}btn-secondary{{/if}} btn-lg" style="width: 100%; margin-top: auto;">
-          {{buttonText}}
+        <a href="{{buttonHref}}" class="btn {{#if highlighted}}btn-primary{{else}}btn-secondary{{/if}} btn-lg" style="width: 100%; margin-top: auto; padding: 1rem 2rem; font-weight: 600; transition: all 0.3s ease; position: relative; overflow: hidden;">
+          <span style="position: relative; z-index: 1;">{{buttonText}}</span>
         </a>
       </div>
       {{/each}}
@@ -30,36 +39,66 @@
 </section>
 
 <style>
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
 .pricing-card {
-  display: flex;
-  flex-direction: column;
-  padding: 2.5rem 2rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
 }
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
 .pricing-highlighted {
   border: 2px solid var(--color-primary);
+  background: linear-gradient(135deg, var(--color-surface), rgba(99, 102, 241, 0.03));
   transform: scale(1.05);
 }
-.price {
-  margin: 2rem 0;
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+
+.pricing-highlighted:hover {
+  transform: scale(1.05) translateY(-8px);
 }
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0;
-  flex: 1;
+
+.pricing-card .features-list li:hover {
+  padding-left: 0.5rem;
+  color: var(--color-primary);
 }
-.features-list li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+.btn {
+  position: relative;
+  z-index: 1;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+}
+
+@media (max-width: 768px) {
+  .pricing-highlighted {
+    transform: scale(1);
+  }
+  
+  .pricing-highlighted:hover {
+    transform: translateY(-8px);
+  }
 }
 </style>

@@ -50,6 +50,105 @@ export class ExportService {
   }
 
   /**
+   * Generate preview HTML with inline styles
+   */
+  async generatePreviewHTML(project: ProjectConfig): Promise<string> {
+    // Get theme
+    const theme = this.themeService.getTheme(project.themeId);
+    if (!theme) throw new Error('Theme not found');
+
+    // Generate CSS
+    const css = this.generateCSS(theme);
+
+    // Get active page or first page
+    const page = project.pages[0];
+    if (!page) throw new Error('No pages in project');
+
+    let componentsHTML = '';
+    for (const component of page.components) {
+      componentsHTML += await this.renderComponent(component);
+    }
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${this.security.sanitizeHtml(page.name)} - Preview</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+${css}
+  </style>
+</head>
+<body>
+${componentsHTML}
+</body>
+</html>`;
+  }
+
+  /**
+   * Export project as React
+   */
+  async exportAsReact(project: ProjectConfig): Promise<void> {
+    const zip = new JSZip();
+    
+    // Get theme
+    const theme = this.themeService.getTheme(project.themeId);
+    if (!theme) throw new Error('Theme not found');
+
+    // Generate package.json
+    zip.file('package.json', this.generateReactPackageJson(project.name));
+
+    // Generate tsconfig.json
+    zip.file('tsconfig.json', this.generateReactTsConfig());
+
+    // Generate vite.config.ts
+    zip.file('vite.config.ts', this.generateViteConfig());
+
+    // Generate index.html
+    zip.file('index.html', this.generateReactIndexHtml(project.name));
+
+    // Generate CSS
+    const css = this.generateCSS(theme);
+    zip.file('src/index.css', css);
+
+    // Create src/components directory with all component files
+    for (const componentType of ['hero-basic', 'hero-centered', 'features-grid', 'pricing-simple', 'faq-accordion', 'navbar-simple', 'footer-columns', 'contact-form', 'cta-simple', 'cta-split', 'testimonials-grid', 'stats-simple', 'logo-cloud', 'content-image-left', 'content-image-right']) {
+      try {
+        const componentName = this.toComponentName(componentType);
+        const templatePath = `/assets/templates/react/components/${componentName}.tsx`;
+        const componentCode = await firstValueFrom(this.http.get(templatePath, { responseType: 'text' }));
+        zip.file(`src/components/${componentName}.tsx`, componentCode);
+      } catch (error) {
+        console.error(`Failed to load React template for ${componentType}:`, error);
+      }
+    }
+
+    // Generate src/pages/HomePage.tsx
+    const homePage = project.pages.find(p => p.routePath === '/') || project.pages[0];
+    if (homePage) {
+      zip.file('src/pages/HomePage.tsx', this.generateReactPage(homePage));
+    }
+
+    // Generate src/App.tsx
+    zip.file('src/App.tsx', this.generateReactApp(project));
+
+    // Generate src/main.tsx
+    zip.file('src/main.tsx', this.generateReactMain());
+
+    // Generate README
+    zip.file('README.md', this.generateReactReadme(project));
+
+    // Generate .gitignore
+    zip.file('.gitignore', this.generateGitignore());
+
+    // Download
+    const blob = await zip.generateAsync({ type: 'blob' });
+    this.downloadBlob(blob, `${project.name.replace(/\s+/g, '-').toLowerCase()}-react.zip`);
+  }
+
+  /**
    * Generate complete HTML document
    */
   private async generateHTML(components: ComponentInstance[], theme: ThemeConfig, pageName: string): Promise<string> {
@@ -67,7 +166,7 @@ export class ExportService {
   <title>${this.security.sanitizeHtml(pageName)}</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
 ${componentsHTML}
@@ -392,6 +491,260 @@ Free to use for any project!
 
 **Built with Visual Landing Page Builder** 🚀
 `;
+  }
+
+  /**
+   * Helper: Convert component type to PascalCase component name
+   */
+  private toComponentName(type: string): string {
+    return type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+  }
+
+  /**
+   * Generate React package.json
+   */
+  private generateReactPackageJson(projectName: string): string {
+    return JSON.stringify({
+      name: projectName.replace(/\s+/g, '-').toLowerCase(),
+      private: true,
+      version: '0.1.0',
+      type: 'module',
+      scripts: {
+        dev: 'vite',
+        build: 'tsc && vite build',
+        preview: 'vite preview',
+        lint: 'eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0'
+      },
+      dependencies: {
+        react: '^18.2.0',
+        'react-dom': '^18.2.0'
+      },
+      devDependencies: {
+        '@types/react': '^18.2.66',
+        '@types/react-dom': '^18.2.22',
+        '@typescript-eslint/eslint-plugin': '^7.2.0',
+        '@typescript-eslint/parser': '^7.2.0',
+        '@vitejs/plugin-react': '^4.2.1',
+        eslint: '^8.57.0',
+        'eslint-plugin-react-hooks': '^4.6.0',
+        'eslint-plugin-react-refresh': '^0.4.6',
+        typescript: '^5.2.2',
+        vite: '^5.2.0'
+      }
+    }, null, 2);
+  }
+
+  /**
+   * Generate React tsconfig.json
+   */
+  private generateReactTsConfig(): string {
+    return JSON.stringify({
+      compilerOptions: {
+        target: 'ES2020',
+        useDefineForClassFields: true,
+        lib: ['ES2020', 'DOM', 'DOM.Iterable'],
+        module: 'ESNext',
+        skipLibCheck: true,
+        moduleResolution: 'bundler',
+        allowImportingTsExtensions: true,
+        resolveJsonModule: true,
+        isolatedModules: true,
+        noEmit: true,
+        jsx: 'react-jsx',
+        strict: true,
+        noUnusedLocals: true,
+        noUnusedParameters: true,
+        noFallthroughCasesInSwitch: true
+      },
+      include: ['src'],
+      references: [{ path: './tsconfig.node.json' }]
+    }, null, 2);
+  }
+
+  /**
+   * Generate Vite config
+   */
+  private generateViteConfig(): string {
+    return `import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+})`;
+  }
+
+  /**
+   * Generate React index.html
+   */
+  private generateReactIndexHtml(projectName: string): string {
+    return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${this.security.sanitizeHtml(projectName)}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`;
+  }
+
+  /**
+   * Generate React page component
+   */
+  private generateReactPage(page: any): string {
+    const imports: string[] = [];
+    const componentUsages: string[] = [];
+
+    for (const component of page.components) {
+      const componentName = this.toComponentName(component.type);
+      if (!imports.includes(componentName)) {
+        imports.push(componentName);
+      }
+
+      // Generate props object
+      const propsEntries = Object.entries(component.props)
+        .map(([key, value]) => {
+          if (typeof value === 'string') {
+            return `${key}="${value}"`;
+          } else if (Array.isArray(value)) {
+            return `${key}={${JSON.stringify(value)}}`;
+          } else if (typeof value === 'object') {
+            return `${key}={${JSON.stringify(value)}}`;
+          }
+          return `${key}={${value}}`;
+        })
+        .join(' ');
+
+      componentUsages.push(`      <${componentName} ${propsEntries} />`);
+    }
+
+    const importStatements = imports
+      .map(name => `import { ${name} } from '../components/${name}';`)
+      .join('\n');
+
+    return `import React from 'react';
+${importStatements}
+
+export const HomePage: React.FC = () => {
+  return (
+    <>
+${componentUsages.join('\n')}
+    </>
+  );
+};`;
+  }
+
+  /**
+   * Generate React App.tsx
+   */
+  private generateReactApp(project: ProjectConfig): string {
+    return `import React from 'react';
+import { HomePage } from './pages/HomePage';
+import './index.css';
+
+function App() {
+  return <HomePage />;
+}
+
+export default App;`;
+  }
+
+  /**
+   * Generate React main.tsx
+   */
+  private generateReactMain(): string {
+    return `import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)`;
+  }
+
+  /**
+   * Generate React README
+   */
+  private generateReactReadme(project: ProjectConfig): string {
+    return `# ${project.name}
+
+Generated by Visual Landing Page Builder
+
+## Getting Started
+
+1. Install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
+
+2. Run development server:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+3. Build for production:
+\`\`\`bash
+npm run build
+\`\`\`
+
+## Project Structure
+
+- \`src/components/\` - Reusable React components
+- \`src/pages/\` - Page components
+- \`src/index.css\` - Global styles and theme
+- \`src/App.tsx\` - Main app component
+- \`src/main.tsx\` - App entry point
+
+## Tech Stack
+
+- React 18
+- TypeScript
+- Vite
+- CSS3 with Custom Properties
+
+## Customization
+
+Edit the components in \`src/pages/HomePage.tsx\` to customize your landing page.
+Theme colors and styles can be modified in \`src/index.css\`.
+`;
+  }
+
+  /**
+   * Generate .gitignore
+   */
+  private generateGitignore(): string {
+    return `# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?`;
   }
 
   /**

@@ -20,9 +20,13 @@
         <span class="material-symbols-outlined">visibility</span>
         Preview
       </button>
-      <button class="btn btn-sm btn-primary" (click)="onExport()" [disabled]="isExporting()">
+      <button class="btn btn-sm btn-primary" (click)="onExportHTML()" [disabled]="isExporting()">
         <span class="material-symbols-outlined">{{ isExporting() ? 'hourglass_empty' : 'download' }}</span>
-        {{ isExporting() ? 'Exporting...' : 'Export' }}
+        {{ isExporting() ? 'Exporting...' : 'Export HTML' }}
+      </button>
+      <button class="btn btn-sm btn-secondary" (click)="onExportReact()" [disabled]="isExporting()">
+        <span class="material-symbols-outlined">{{ isExporting() ? 'hourglass_empty' : 'code' }}</span>
+        {{ isExporting() ? 'Exporting...' : 'Export React' }}
       </button>
     </div>
   </div>
@@ -80,48 +84,61 @@
   <div class="canvas-area">
     <div class="canvas-container" style="max-width: 1200px; margin: 0 auto;">
       @if (builderState.activePage(); as page) {
-        @for (component of page.components; track component.id) {
-          <div
-            class="canvas-component"
-            [class.selected]="builderState.selectedComponentId() === component.id"
-            (click)="onComponentClick(component.id)"
+        @if (page.components.length > 0) {
+          <div 
+            cdkDropList 
+            (cdkDropListDropped)="onComponentDrop($event)"
+            class="components-drop-list"
           >
-            <!-- Render component preview -->
-            <div class="component-preview">
-              <div style="padding: var(--spacing-lg); background: var(--color-surface); border-radius: var(--radius-md);">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-md);">
-                  <div>
-                    <strong>{{ component.type }}</strong>
-                    <div style="font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--spacing-xs);">
-                      ID: {{ component.id.substring(0, 8) }}...
+            @for (component of page.components; track component.id) {
+              <div
+                cdkDrag
+                class="canvas-component"
+                [class.selected]="builderState.selectedComponentId() === component.id"
+                (click)="onComponentClick(component.id)"
+              >
+                <!-- Drag handle -->
+                <div class="drag-handle" cdkDragHandle>
+                  <span class="material-symbols-outlined">drag_indicator</span>
+                </div>
+
+                <!-- Render component preview -->
+                <div class="component-preview">
+                  <div style="padding: var(--spacing-lg); background: var(--color-surface); border-radius: var(--radius-md);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-md);">
+                      <div>
+                        <strong>{{ component.type }}</strong>
+                        <div style="font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--spacing-xs);">
+                          ID: {{ component.id.substring(0, 8) }}...
+                        </div>
+                      </div>
+                      <button
+                        class="btn btn-sm"
+                        style="background: rgba(255, 99, 71, 0.2); color: tomato; padding: var(--spacing-sm);"
+                        (click)="onDeleteComponent(component.id); $event.stopPropagation()"
+                      >
+                        <span class="material-symbols-outlined">delete</span>
+                      </button>
+                    </div>
+                    
+                    <!-- Show some props -->
+                    <div style="font-size: var(--text-sm); color: var(--color-muted);">
+                      @if (component.props['title']) {
+                        <div><strong>Title:</strong> {{ component.props['title'] }}</div>
+                      }
+                      @if (component.props['heading']) {
+                        <div><strong>Heading:</strong> {{ component.props['heading'] }}</div>
+                      }
+                      @if (component.props['subtitle']) {
+                        <div><strong>Subtitle:</strong> {{ component.props['subtitle'] }}</div>
+                      }
                     </div>
                   </div>
-                  <button
-                    class="btn btn-sm"
-                    style="background: rgba(255, 99, 71, 0.2); color: tomato; padding: var(--spacing-sm);"
-                    (click)="onDeleteComponent(component.id); $event.stopPropagation()"
-                  >
-                    <span class="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
-                
-                <!-- Show some props -->
-                <div style="font-size: var(--text-sm); color: var(--color-muted);">
-                  @if (component.props['title']) {
-                    <div><strong>Title:</strong> {{ component.props['title'] }}</div>
-                  }
-                  @if (component.props['heading']) {
-                    <div><strong>Heading:</strong> {{ component.props['heading'] }}</div>
-                  }
-                  @if (component.props['subtitle']) {
-                    <div><strong>Subtitle:</strong> {{ component.props['subtitle'] }}</div>
-                  }
                 </div>
               </div>
-            </div>
+            }
           </div>
-        }
-        @empty {
+        } @else {
           <div style="text-align: center; padding: var(--spacing-3xl); color: var(--color-muted);">
             <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3;">add_circle</span>
             <p style="margin-top: var(--spacing-md);">Click on a component from the left to get started</p>

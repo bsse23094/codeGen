@@ -1,20 +1,28 @@
 <!-- Features Grid Template -->
-<section class="features-grid section">
+<section class="features-grid section" style="padding: 6rem 0; position: relative;">
   <div class="container">
-    <div style="text-align: center; margin-bottom: 3rem;">
-      <h2>{{heading}}</h2>
+    <div style="text-align: center; margin-bottom: 4rem; animation: fadeInUp 0.6s ease-out;">
+      <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--color-text), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{heading}}</h2>
       {{#if subheading}}
-      <p class="subtitle" style="color: var(--color-muted);">{{subheading}}</p>
+      <p class="subtitle" style="color: var(--color-muted); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">{{subheading}}</p>
       {{/if}}
     </div>
     <div class="features-grid-container">
       {{#each items}}
-      <div class="card feature-card">
-        <div class="feature-icon">
-          <span class="material-symbols-outlined" style="font-size: 48px; color: var(--color-primary);">{{icon}}</span>
+      <div class="card feature-card" style="text-align: center; padding: 2.5rem 2rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: calc(var(--radius-md) * 1px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; animation: fadeInUp 0.6s ease-out; animation-delay: calc({{@index}} * 0.1s); animation-fill-mode: both;">
+        <!-- Gradient Border on Hover -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--color-primary), transparent); opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 0;"></div>
+        <div style="position: relative; z-index: 1;">
+          <!-- Icon Container -->
+          <div class="feature-icon" style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="material-symbols-outlined" style="font-size: 40px; color: var(--color-primary); transition: transform 0.4s;">{{icon}}</span>
+            <!-- Icon Background Glow -->
+            <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent); border-radius: 50%; opacity: 0; transition: opacity 0.4s;"></div>
+          </div>
+          
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text);">{{title}}</h3>
+          <p style="color: var(--color-muted); line-height: 1.7; margin: 0;">{{description}}</p>
         </div>
-        <h3>{{title}}</h3>
-        <p style="color: var(--color-muted);">{{description}}</p>
       </div>
       {{/each}}
     </div>
@@ -24,13 +32,40 @@
 <style>
 .features-grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
-.feature-card {
-  text-align: center;
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-primary);
 }
-.feature-icon {
-  margin-bottom: 1.5rem;
+
+.feature-card:hover > div:first-child {
+  opacity: 0.05;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-card:hover .feature-icon .material-symbols-outlined {
+  transform: scale(1.1);
+}
+
+.feature-card:hover .feature-icon > div {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .features-grid-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 2rem 1.5rem;
+  }
 }
 </style>
