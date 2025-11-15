@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BuilderStateService } from '../core/services/builder-state.service';
 import { ThemeService } from '../core/services/theme.service';
 import { ComponentRegistryService } from '../core/services/component-registry.service';
+import { ExportService } from '../core/services/export.service';
 import { ComponentDefinition } from '../core/models';
 import { InspectorComponent } from '../shared/inspector.component';
 import { ThemeEditorComponent } from '../shared/theme-editor.component';
@@ -18,10 +19,12 @@ export class BuilderComponent implements OnInit {
   readonly builderState = inject(BuilderStateService);
   readonly themeService = inject(ThemeService);
   readonly componentRegistry = inject(ComponentRegistryService);
+  readonly exportService = inject(ExportService);
 
   // UI state
   searchQuery = signal('');
   selectedCategory = signal<string | null>(null);
+  isExporting = signal(false);
 
   ngOnInit() {
     // Initialize with a sample project
@@ -32,8 +35,23 @@ export class BuilderComponent implements OnInit {
   }
 
   // Top bar actions
-  onExport() {
-    console.log('Export clicked');
+  async onExport() {
+    const project = this.builderState.project();
+    if (!project) {
+      alert('No project to export');
+      return;
+    }
+
+    this.isExporting.set(true);
+    try {
+      await this.exportService.exportAsHTML(project);
+      console.log('Export successful!');
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Export failed. Check console for details.');
+    } finally {
+      this.isExporting.set(false);
+    }
   }
 
   onPreview() {

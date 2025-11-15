@@ -1,0 +1,36 @@
+<!-- Features Grid Template -->
+<section class="features-grid section">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2>{{heading}}</h2>
+      {{#if subheading}}
+      <p class="subtitle" style="color: var(--color-muted);">{{subheading}}</p>
+      {{/if}}
+    </div>
+    <div class="features-grid-container">
+      {{#each items}}
+      <div class="card feature-card">
+        <div class="feature-icon">
+          <span class="material-symbols-outlined" style="font-size: 48px; color: var(--color-primary);">{{icon}}</span>
+        </div>
+        <h3>{{title}}</h3>
+        <p style="color: var(--color-muted);">{{description}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<style>
+.features-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+.feature-card {
+  text-align: center;
+}
+.feature-icon {
+  margin-bottom: 1.5rem;
+}
+</style>

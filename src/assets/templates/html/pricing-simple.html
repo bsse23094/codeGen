@@ -1,0 +1,65 @@
+<!-- Pricing Simple Template -->
+<section class="pricing-simple section">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <h2>{{heading}}</h2>
+      {{#if subheading}}
+      <p class="subtitle" style="color: var(--color-muted);">{{subheading}}</p>
+      {{/if}}
+    </div>
+    <div class="pricing-grid">
+      {{#each plans}}
+      <div class="card pricing-card {{#if highlighted}}pricing-highlighted{{/if}}">
+        <h3>{{name}}</h3>
+        <div class="price">
+          <span style="font-size: 3rem; font-weight: 700;">{{price}}</span>
+          <span style="color: var(--color-muted);">{{period}}</span>
+        </div>
+        <ul class="features-list">
+          {{#each features}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+        <a href="{{buttonHref}}" class="btn {{#if highlighted}}btn-primary{{else}}btn-secondary{{/if}} btn-lg" style="width: 100%; margin-top: auto;">
+          {{buttonText}}
+        </a>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<style>
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 2rem;
+}
+.pricing-highlighted {
+  border: 2px solid var(--color-primary);
+  transform: scale(1.05);
+}
+.price {
+  margin: 2rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  flex: 1;
+}
+.features-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+</style>

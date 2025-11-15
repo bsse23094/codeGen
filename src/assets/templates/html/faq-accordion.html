@@ -1,0 +1,49 @@
+<!-- FAQ Accordion Template -->
+<section class="faq-accordion section">
+  <div class="container" style="max-width: 800px;">
+    <h2 style="text-align: center; margin-bottom: 3rem;">{{heading}}</h2>
+    <div class="faq-list">
+      {{#each items}}
+      <details class="faq-item">
+        <summary class="faq-question">
+          {{question}}
+          <span class="material-symbols-outlined">expand_more</span>
+        </summary>
+        <div class="faq-answer">
+          {{answer}}
+        </div>
+      </details>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<style>
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.faq-item {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  cursor: pointer;
+}
+.faq-question {
+  font-weight: 600;
+  font-size: 1.125rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.faq-answer {
+  margin-top: 1rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+details[open] .faq-question .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+</style>

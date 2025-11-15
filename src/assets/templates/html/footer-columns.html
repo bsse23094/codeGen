@@ -1,0 +1,67 @@
+<!-- Footer Columns Template -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>{{brandName}}</h3>
+        <p style="color: var(--color-muted);">{{brandTagline}}</p>
+      </div>
+      {{#each columns}}
+      <div class="footer-column">
+        <h4>{{title}}</h4>
+        <ul>
+          {{#each links}}
+          <li><a href="{{href}}">{{text}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/each}}
+    </div>
+    <div class="footer-bottom">
+      <p style="color: var(--color-muted); margin: 0;">{{copyright}}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background: var(--color-surface);
+  padding: 4rem 0 2rem;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand h3 {
+  margin-bottom: 0.5rem;
+}
+.footer-column h4 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-column ul li {
+  margin-bottom: 0.75rem;
+}
+.footer-column a {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-column a:hover {
+  color: var(--color-primary);
+}
+.footer-bottom {
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+</style>

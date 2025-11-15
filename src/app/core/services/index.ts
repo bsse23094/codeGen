@@ -6,3 +6,4 @@ export * from './theme.service';
 export * from './security.service';
 export * from './storage.service';
 export * from './component-registry.service';
+export * from './export.service';

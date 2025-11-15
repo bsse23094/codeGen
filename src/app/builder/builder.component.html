@@ -20,9 +20,9 @@
         <span class="material-symbols-outlined">visibility</span>
         Preview
       </button>
-      <button class="btn btn-sm btn-primary" (click)="onExport()">
-        <span class="material-symbols-outlined">download</span>
-        Export
+      <button class="btn btn-sm btn-primary" (click)="onExport()" [disabled]="isExporting()">
+        <span class="material-symbols-outlined">{{ isExporting() ? 'hourglass_empty' : 'download' }}</span>
+        {{ isExporting() ? 'Exporting...' : 'Export' }}
       </button>
     </div>
   </div>
