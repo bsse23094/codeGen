@@ -1,14 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../core/services/theme.service';
 import { BuilderStateService } from '../core/services/builder-state.service';
+import { FONT_PRESETS, LOGO_PRESETS, SPACING_PRESETS, ANIMATION_SPEED_PRESETS } from '../core/constants/customization-presets';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-theme-editor',
   imports: [CommonModule, FormsModule],
   template: `
     <div class="theme-editor">
+      <!-- Theme Preset Selector -->
       <div style="margin-bottom: var(--spacing-lg);">
         <label>Theme Preset</label>
         <select
@@ -22,6 +25,147 @@ import { BuilderStateService } from '../core/services/builder-state.service';
         @if (currentTheme(); as theme) {
           <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
             {{ theme.description }}
+          </div>
+        }
+      </div>
+
+      <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: var(--spacing-lg) 0;" />
+
+      <!-- Logo Section -->
+      <div style="margin-bottom: var(--spacing-md);">
+        <h5 style="font-size: var(--text-sm); margin-bottom: var(--spacing-md); font-weight: 600;">Logo</h5>
+        
+        <div style="margin-bottom: var(--spacing-md);">
+          <label style="font-size: var(--text-sm);">Logo Type</label>
+          <select
+            [value]="selectedLogoType()"
+            (change)="onLogoTypeChange($any($event.target).value)"
+          >
+            <option value="preset">Preset Logo</option>
+            <option value="custom">Custom URL</option>
+            <option value="text">Text Only</option>
+          </select>
+        </div>
+
+        @if (selectedLogoType() === 'preset') {
+          <div style="margin-bottom: var(--spacing-md);">
+            <label style="font-size: var(--text-sm);">Select Logo</label>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+              @for (logo of logoPresets; track logo.id) {
+                <button
+                  type="button"
+                  [class.active]="selectedLogoId() === logo.id"
+                  (click)="selectLogoPreset(logo.id)"
+                  style="padding: var(--spacing-sm); border: 2px solid transparent; border-radius: var(--radius-md); background: var(--color-surface); cursor: pointer; transition: all 0.2s; aspect-ratio: 1;"
+                  [style.border-color]="selectedLogoId() === logo.id ? 'var(--color-primary)' : 'transparent'"
+                  [attr.title]="logo.name"
+                >
+                  <div [innerHTML]="sanitizeSvg(logo.svg)" style="width: 100%; height: 100%; color: var(--color-primary);"></div>
+                </button>
+              }
+            </div>
+          </div>
+        } @else if (selectedLogoType() === 'custom') {
+          <div style="margin-bottom: var(--spacing-md);">
+            <label style="font-size: var(--text-sm);">Logo URL</label>
+            <input
+              type="url"
+              [value]="currentTheme()?.tokens?.logo || ''"
+              (input)="updateToken('logo', $any($event.target).value)"
+              placeholder="https://example.com/logo.png"
+            />
+          </div>
+        }
+
+        @if (selectedLogoType() !== 'text') {
+          <div style="margin-bottom: var(--spacing-md);">
+            <label style="font-size: var(--text-sm);">Logo Size</label>
+            <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+              <input
+                type="range"
+                min="20"
+                max="80"
+                step="4"
+                [value]="parseLogoSize()"
+                (input)="updateLogoSize($any($event.target).value)"
+                style="flex: 1;"
+              />
+              <span style="min-width: 45px; text-align: right; font-size: var(--text-sm); color: var(--color-muted);">
+                {{ parseLogoSize() }}px
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: var(--spacing-lg) 0;" />
+
+      <!-- Typography Section -->
+      <div style="margin-bottom: var(--spacing-md);">
+        <h5 style="font-size: var(--text-sm); margin-bottom: var(--spacing-md); font-weight: 600;">Typography</h5>
+        
+        <div style="margin-bottom: var(--spacing-md);">
+          <label style="font-size: var(--text-sm);">Font Preset</label>
+          <select
+            [value]="selectedFontPresetId()"
+            (change)="onFontPresetChange($any($event.target).value)"
+          >
+            <option value="">Custom Fonts</option>
+            <optgroup label="Modern">
+              @for (font of fontPresets; track font.id) {
+                @if (font.category === 'modern') {
+                  <option [value]="font.id">{{ font.name }}</option>
+                }
+              }
+            </optgroup>
+            <optgroup label="Elegant">
+              @for (font of fontPresets; track font.id) {
+                @if (font.category === 'elegant') {
+                  <option [value]="font.id">{{ font.name }}</option>
+                }
+              }
+            </optgroup>
+            <optgroup label="Classic">
+              @for (font of fontPresets; track font.id) {
+                @if (font.category === 'classic') {
+                  <option [value]="font.id">{{ font.name }}</option>
+                }
+              }
+            </optgroup>
+            <optgroup label="Playful">
+              @for (font of fontPresets; track font.id) {
+                @if (font.category === 'playful') {
+                  <option [value]="font.id">{{ font.name }}</option>
+                }
+              }
+            </optgroup>
+          </select>
+          @if (selectedFontPresetId()) {
+            <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
+              Uses Google Fonts
+            </div>
+          }
+        </div>
+
+        @if (!selectedFontPresetId()) {
+          <div style="margin-bottom: var(--spacing-md);">
+            <label style="font-size: var(--text-sm);">Heading Font</label>
+            <input
+              type="text"
+              [value]="currentTheme()?.tokens?.fontHeading || ''"
+              (input)="updateToken('fontHeading', $any($event.target).value)"
+              placeholder="'Inter', sans-serif"
+            />
+          </div>
+
+          <div style="margin-bottom: var(--spacing-md);">
+            <label style="font-size: var(--text-sm);">Body Font</label>
+            <input
+              type="text"
+              [value]="currentTheme()?.tokens?.fontBody || ''"
+              (input)="updateToken('fontBody', $any($event.target).value)"
+              placeholder="'Inter', sans-serif"
+            />
           </div>
         }
       </div>
@@ -177,6 +321,30 @@ import { BuilderStateService } from '../core/services/builder-state.service';
             <option value="strong">Strong</option>
           </select>
         </div>
+
+        <div style="margin-bottom: var(--spacing-md);">
+          <label style="font-size: var(--text-sm);">Base Spacing</label>
+          <select
+            [value]="currentTheme()?.tokens?.spacing || '1rem'"
+            (change)="updateToken('spacing', $any($event.target).value)"
+          >
+            @for (spacing of spacingPresets; track spacing.value) {
+              <option [value]="spacing.value">{{ spacing.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div style="margin-bottom: var(--spacing-md);">
+          <label style="font-size: var(--text-sm);">Animation Speed</label>
+          <select
+            [value]="currentTheme()?.tokens?.animationSpeed || '0.3s'"
+            (change)="updateToken('animationSpeed', $any($event.target).value)"
+          >
+            @for (speed of animationSpeedPresets; track speed.value) {
+              <option [value]="speed.value">{{ speed.label }}</option>
+            }
+          </select>
+        </div>
       </div>
 
       <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: var(--spacing-lg) 0;" />
@@ -202,9 +370,21 @@ import { BuilderStateService } from '../core/services/builder-state.service';
 export class ThemeEditorComponent {
   themeService = inject(ThemeService);
   builderState = inject(BuilderStateService);
+  private sanitizer = inject(DomSanitizer);
 
   themes = this.themeService.getThemes();
   currentTheme = this.themeService.currentTheme;
+
+  // Import presets
+  fontPresets = FONT_PRESETS;
+  logoPresets = LOGO_PRESETS;
+  spacingPresets = SPACING_PRESETS;
+  animationSpeedPresets = ANIMATION_SPEED_PRESETS;
+
+  // Local state
+  selectedLogoType = signal<'preset' | 'custom' | 'text'>('preset');
+  selectedLogoId = signal<string>('circle-dot');
+  selectedFontPresetId = signal<string>('lexend-modern');
 
   onThemeChange(themeId: string) {
     this.themeService.applyTheme(themeId);
@@ -213,6 +393,67 @@ export class ThemeEditorComponent {
 
   updateToken(key: string, value: string) {
     this.themeService.updateToken(key as any, value);
+  }
+
+  // Logo methods
+  onLogoTypeChange(type: 'preset' | 'custom' | 'text') {
+    this.selectedLogoType.set(type);
+    if (type === 'preset') {
+      this.selectLogoPreset(this.selectedLogoId());
+    } else if (type === 'text') {
+      this.updateToken('logo', '');
+    }
+  }
+
+  selectLogoPreset(logoId: string) {
+    this.selectedLogoId.set(logoId);
+    const logo = this.logoPresets.find(l => l.id === logoId);
+    if (logo) {
+      // Store the SVG in the logo token
+      this.updateToken('logo', `preset:${logoId}`);
+    }
+  }
+
+  parseLogoSize(): number {
+    const size = this.currentTheme()?.tokens?.logoSize || '40px';
+    return parseInt(size, 10);
+  }
+
+  updateLogoSize(value: string) {
+    this.updateToken('logoSize', `${value}px`);
+  }
+
+  sanitizeSvg(svg: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+
+  // Font methods
+  onFontPresetChange(fontId: string) {
+    this.selectedFontPresetId.set(fontId);
+    if (fontId) {
+      const font = this.fontPresets.find(f => f.id === fontId);
+      if (font) {
+        this.updateToken('fontHeading', font.heading);
+        this.updateToken('fontBody', font.body);
+        // Load Google Fonts
+        if (font.googleFontsUrl) {
+          this.loadGoogleFont(font.googleFontsUrl);
+        }
+      }
+    }
+  }
+
+  private loadGoogleFont(url: string) {
+    // Remove existing font links
+    const existingLinks = document.querySelectorAll('link[data-font-preset]');
+    existingLinks.forEach(link => link.remove());
+
+    // Add new font link
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = url;
+    link.setAttribute('data-font-preset', 'true');
+    document.head.appendChild(link);
   }
 
   parseRadius(radiusValue: string): number {

@@ -27,8 +27,12 @@ export class ThemeService {
         colorMuted: '#9ca3af',
         borderRadius: '1rem',
         shadowSoft: '0 18px 45px rgba(15, 23, 42, 0.4)',
-        fontHeading: "'DM Sans', system-ui, sans-serif",
-        fontBody: "'Inter', system-ui, sans-serif"
+        fontHeading: "'Lexend Deca', sans-serif",
+        fontBody: "'Lexend', sans-serif",
+        logo: 'preset:circle-dot',
+        logoSize: '40px',
+        spacing: '1rem',
+        animationSpeed: '0.3s'
       }
     },
     {
@@ -44,8 +48,12 @@ export class ThemeService {
         colorMuted: '#94a3b8',
         borderRadius: '0.75rem',
         shadowSoft: '0 20px 50px rgba(0, 0, 0, 0.5)',
-        fontHeading: "'DM Sans', system-ui, sans-serif",
-        fontBody: "'Inter', system-ui, sans-serif"
+        fontHeading: "'Inter', sans-serif",
+        fontBody: "'Inter', sans-serif",
+        logo: 'preset:hexagon-tech',
+        logoSize: '36px',
+        spacing: '1rem',
+        animationSpeed: '0.3s'
       }
     },
     {
@@ -61,8 +69,12 @@ export class ThemeService {
         colorMuted: '#64748b',
         borderRadius: '0.5rem',
         shadowSoft: '0 8px 30px rgba(0, 0, 0, 0.12)',
-        fontHeading: "'Space Grotesk', system-ui, sans-serif",
-        fontBody: "'DM Sans', system-ui, sans-serif"
+        fontHeading: "'Space Grotesk', sans-serif",
+        fontBody: "'Work Sans', sans-serif",
+        logo: 'preset:star-burst',
+        logoSize: '44px',
+        spacing: '1.5rem',
+        animationSpeed: '0.5s'
       }
     },
     {
@@ -78,8 +90,12 @@ export class ThemeService {
         colorMuted: '#737373',
         borderRadius: '0.25rem',
         shadowSoft: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        fontHeading: "'Inter', system-ui, sans-serif",
-        fontBody: "'Inter', system-ui, sans-serif"
+        fontHeading: "'Inter', sans-serif",
+        fontBody: "'Inter', sans-serif",
+        logo: 'preset:triangle-modern',
+        logoSize: '38px',
+        spacing: '0.5rem',
+        animationSpeed: '0.2s'
       }
     }
   ];
@@ -121,6 +137,20 @@ export class ThemeService {
     root.style.setProperty('--shadow-soft', theme.tokens.shadowSoft);
     root.style.setProperty('--font-heading', theme.tokens.fontHeading);
     root.style.setProperty('--font-body', theme.tokens.fontBody);
+    
+    // Apply new customization tokens
+    if (theme.tokens.logo) {
+      root.style.setProperty('--logo', theme.tokens.logo);
+    }
+    if (theme.tokens.logoSize) {
+      root.style.setProperty('--logo-size', theme.tokens.logoSize);
+    }
+    if (theme.tokens.spacing) {
+      root.style.setProperty('--spacing-base', theme.tokens.spacing);
+    }
+    if (theme.tokens.animationSpeed) {
+      root.style.setProperty('--animation-speed', theme.tokens.animationSpeed);
+    }
 
     // Apply theme class to body
     document.body.className = document.body.className
@@ -160,7 +190,11 @@ export class ThemeService {
       borderRadius: '--radius-lg',
       shadowSoft: '--shadow-soft',
       fontHeading: '--font-heading',
-      fontBody: '--font-body'
+      fontBody: '--font-body',
+      logo: '--logo',
+      logoSize: '--logo-size',
+      spacing: '--spacing-base',
+      animationSpeed: '--animation-speed'
     };
     return map[key] || '';
   }
