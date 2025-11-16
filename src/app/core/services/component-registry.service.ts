@@ -140,7 +140,23 @@ export class ComponentRegistryService {
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
         { key: 'subheading', type: 'textarea', label: 'Subheading' },
-        { key: 'plans', type: 'textarea', label: 'Plans (JSON)', helperText: 'Array of pricing plans' }
+        { 
+          key: 'plans', 
+          type: 'array', 
+          label: 'Pricing Plans',
+          arrayConfig: {
+            itemLabel: 'Plan',
+            fields: [
+              { key: 'name', type: 'text', label: 'Plan Name', placeholder: 'Starter' },
+              { key: 'price', type: 'text', label: 'Price', placeholder: '$9' },
+              { key: 'period', type: 'text', label: 'Period', placeholder: '/month' },
+              { key: 'features', type: 'list', label: 'Features', placeholder: 'One feature per line' },
+              { key: 'buttonText', type: 'text', label: 'Button Text', placeholder: 'Get Started' },
+              { key: 'buttonHref', type: 'url', label: 'Button Link', placeholder: '#' },
+              { key: 'highlighted', type: 'boolean', label: 'Highlight this plan' }
+            ]
+          }
+        }
       ]
     },
 
@@ -185,37 +201,70 @@ export class ComponentRegistryService {
       defaultProps: {
         brandName: 'MyApp',
         brandTagline: 'Build better, ship faster',
-        columns: [
-          {
-            title: 'Product',
-            links: [
-              { text: 'Features', href: '#' },
-              { text: 'Pricing', href: '#' },
-              { text: 'FAQ', href: '#' }
-            ]
-          },
-          {
-            title: 'Company',
-            links: [
-              { text: 'About', href: '#' },
-              { text: 'Blog', href: '#' },
-              { text: 'Careers', href: '#' }
-            ]
-          },
-          {
-            title: 'Legal',
-            links: [
-              { text: 'Privacy', href: '#' },
-              { text: 'Terms', href: '#' }
-            ]
-          }
+        // Column 1
+        column1Title: 'Product',
+        column1Links: [
+          { text: 'Features', href: '#' },
+          { text: 'Pricing', href: '#' },
+          { text: 'FAQ', href: '#' }
+        ],
+        // Column 2
+        column2Title: 'Company',
+        column2Links: [
+          { text: 'About', href: '#' },
+          { text: 'Blog', href: '#' },
+          { text: 'Careers', href: '#' }
+        ],
+        // Column 3
+        column3Title: 'Legal',
+        column3Links: [
+          { text: 'Privacy', href: '#' },
+          { text: 'Terms', href: '#' }
         ],
         copyright: '© 2024 MyApp. All rights reserved.'
       },
       inputs: [
         { key: 'brandName', type: 'text', label: 'Brand Name' },
         { key: 'brandTagline', type: 'text', label: 'Brand Tagline' },
-        { key: 'columns', type: 'textarea', label: 'Link Columns (JSON)' },
+        { key: 'column1Title', type: 'text', label: 'Column 1 Title' },
+        { 
+          key: 'column1Links', 
+          type: 'array', 
+          label: 'Column 1 Links',
+          arrayConfig: {
+            itemLabel: 'Link',
+            fields: [
+              { key: 'text', type: 'text', label: 'Link Text', placeholder: 'Features' },
+              { key: 'href', type: 'url', label: 'Link URL', placeholder: '#' }
+            ]
+          }
+        },
+        { key: 'column2Title', type: 'text', label: 'Column 2 Title' },
+        { 
+          key: 'column2Links', 
+          type: 'array', 
+          label: 'Column 2 Links',
+          arrayConfig: {
+            itemLabel: 'Link',
+            fields: [
+              { key: 'text', type: 'text', label: 'Link Text', placeholder: 'About' },
+              { key: 'href', type: 'url', label: 'Link URL', placeholder: '#' }
+            ]
+          }
+        },
+        { key: 'column3Title', type: 'text', label: 'Column 3 Title' },
+        { 
+          key: 'column3Links', 
+          type: 'array', 
+          label: 'Column 3 Links',
+          arrayConfig: {
+            itemLabel: 'Link',
+            fields: [
+              { key: 'text', type: 'text', label: 'Link Text', placeholder: 'Privacy' },
+              { key: 'href', type: 'url', label: 'Link URL', placeholder: '#' }
+            ]
+          }
+        },
         { key: 'copyright', type: 'text', label: 'Copyright Text' }
       ]
     },

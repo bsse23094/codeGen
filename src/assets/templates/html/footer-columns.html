@@ -43,11 +43,11 @@
       </div>
       
       <!-- Footer Columns -->
-      {{#each columns}}
-      <div class="footer-column" style="animation: fadeInUp 0.6s ease-out; animation-delay: calc({{@index}} * 0.1s + 0.2s); animation-fill-mode: both;">
-        <h4 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.05em;">{{title}}</h4>
+      {{#if column1Title}}
+      <div class="footer-column" style="animation: fadeInUp 0.6s ease-out; animation-delay: 0.2s; animation-fill-mode: both;">
+        <h4 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.05em;">{{column1Title}}</h4>
         <ul style="list-style: none; padding: 0; margin: 0;">
-          {{#each links}}
+          {{#each column1Links}}
           <li style="margin-bottom: 0.625rem;">
             <a href="{{href}}" style="color: var(--color-muted); text-decoration: none; transition: all 0.3s; display: inline-block; font-size: 0.9375rem;">
               {{text}}
@@ -56,7 +56,37 @@
           {{/each}}
         </ul>
       </div>
-      {{/each}}
+      {{/if}}
+      
+      {{#if column2Title}}
+      <div class="footer-column" style="animation: fadeInUp 0.6s ease-out; animation-delay: 0.3s; animation-fill-mode: both;">
+        <h4 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.05em;">{{column2Title}}</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          {{#each column2Links}}
+          <li style="margin-bottom: 0.625rem;">
+            <a href="{{href}}" style="color: var(--color-muted); text-decoration: none; transition: all 0.3s; display: inline-block; font-size: 0.9375rem;">
+              {{text}}
+            </a>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+      
+      {{#if column3Title}}
+      <div class="footer-column" style="animation: fadeInUp 0.6s ease-out; animation-delay: 0.4s; animation-fill-mode: both;">
+        <h4 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 1rem; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.05em;">{{column3Title}}</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          {{#each column3Links}}
+          <li style="margin-bottom: 0.625rem;">
+            <a href="{{href}}" style="color: var(--color-muted); text-decoration: none; transition: all 0.3s; display: inline-block; font-size: 0.9375rem;">
+              {{text}}
+            </a>
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
     </div>
     
     <!-- Footer Bottom -->

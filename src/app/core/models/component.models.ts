@@ -20,7 +20,7 @@ export interface ArrayInputConfig {
   fields: {
     key: string;
     label: string;
-    type: 'text' | 'textarea' | 'url' | 'icon';
+    type: 'text' | 'textarea' | 'url' | 'icon' | 'list' | 'boolean';
     placeholder?: string;
   }[];
 }

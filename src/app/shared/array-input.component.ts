@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 export interface ArrayInputField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'url' | 'icon';
+  type: 'text' | 'textarea' | 'url' | 'icon' | 'list' | 'boolean';
   placeholder?: string;
 }
 
@@ -110,6 +110,27 @@ export interface ArrayInputField {
                       <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
                         Material Symbols icon name
                       </div>
+                    } @else if (field.type === 'list') {
+                      <textarea
+                        [value]="getListValue(item[field.key])"
+                        (input)="updateListField($index, field.key, $any($event.target).value)"
+                        [placeholder]="field.placeholder || 'One item per line'"
+                        rows="4"
+                        style="font-family: var(--font-body);"
+                      ></textarea>
+                      <div style="font-size: var(--text-xs); color: var(--color-muted); margin-top: var(--spacing-xs);">
+                        Enter one item per line
+                      </div>
+                    } @else if (field.type === 'boolean') {
+                      <label style="display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer; padding: var(--spacing-sm) 0;">
+                        <input
+                          type="checkbox"
+                          [checked]="item[field.key]"
+                          (change)="updateField($index, field.key, $any($event.target).checked)"
+                          style="width: 18px; height: 18px; cursor: pointer;"
+                        />
+                        <span style="font-size: var(--text-sm);">{{ field.label }}</span>
+                      </label>
                     } @else {
                       <input
                         [type]="field.type === 'url' ? 'url' : 'text'"
@@ -308,6 +329,20 @@ export class ArrayInputComponent {
     updated[index] = { ...updated[index], [key]: value };
     this.items.set(updated);
     this.valueChange.emit(updated);
+  }
+
+  updateListField(index: number, key: string, value: string) {
+    // Convert newline-separated text to array
+    const array = value.split('\n').filter(line => line.trim() !== '');
+    this.updateField(index, key, array);
+  }
+
+  getListValue(value: any): string {
+    // Convert array to newline-separated text
+    if (Array.isArray(value)) {
+      return value.join('\n');
+    }
+    return '';
   }
 
   toggleCollapse(index: number) {
