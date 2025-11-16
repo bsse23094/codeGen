@@ -29,7 +29,7 @@ export class BuilderComponent implements OnInit {
 
   ngOnInit() {
     // Initialize with a sample project
-    const project = this.builderState.createNewProject('My Landing Page');
+    const project = this.builderState.createNewProject('CodeGen');
     
     // Apply default theme
     this.themeService.applyTheme(project.themeId);
