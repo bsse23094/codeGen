@@ -1,0 +1,36 @@
+<!-- Testimonials Grid Template -->
+<section class="testimonials-grid section" style="padding: 6rem 0; position: relative;">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 4rem; animation: fadeInUp 0.6s ease-out;">
+      <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--color-text), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{heading}}</h2>
+      <p style="color: var(--color-muted); font-size: 1.125rem;">{{subheading}}</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+      {{#each testimonials}}
+      <div class="card" style="padding: 2.5rem; position: relative; overflow: hidden; animation: fadeInUp 0.6s ease-out; animation-delay: calc({{@index}} * 0.1s); animation-fill-mode: both;">
+        <!-- Quote Icon -->
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="position: absolute; top: 1.5rem; right: 1.5rem; opacity: 0.1;">
+          <path d="M12 24C12 19.6 14.4 16 19.2 16V12C12 12 6 17.6 6 24V36H18V24H12ZM36 24C36 19.6 38.4 16 43.2 16V12C36 12 30 17.6 30 24V36H42V24H36Z" fill="var(--color-primary)"/>
+        </svg>
+        
+        <p style="font-size: 1.125rem; line-height: 1.7; color: var(--color-text); margin-bottom: 2rem; position: relative; z-index: 1;">"{{quote}}"</p>
+        
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <img src="{{avatar}}" alt="{{author}}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary);" onerror="this.style.display='none'">
+          <div>
+            <div style="font-weight: 600; color: var(--color-text); margin-bottom: 0.25rem;">{{author}}</div>
+            <div style="font-size: 0.875rem; color: var(--color-muted);">{{role}}</div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<style>
+.testimonials-grid .card:hover {
+  transform: translateY(-8px);
+}
+</style>

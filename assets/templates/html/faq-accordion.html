@@ -1,0 +1,101 @@
+<!-- FAQ Accordion Template -->
+<section class="faq-accordion section" style="padding: 6rem 0; background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.02), transparent);">
+  <div class="container" style="max-width: 900px;">
+    <div style="text-align: center; margin-bottom: 4rem; animation: fadeInUp 0.6s ease-out;">
+      <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--color-text), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{heading}}</h2>
+      <p style="color: var(--color-muted); font-size: 1.125rem;">Everything you need to know</p>
+    </div>
+    <div class="faq-list">
+      {{#each items}}
+      <details class="faq-item" style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: calc(var(--radius-lg) * 1px); padding: 0; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; animation: fadeInUp 0.6s ease-out; animation-delay: calc({{@index}} * 0.1s); animation-fill-mode: both;">
+        <summary class="faq-question" style="font-weight: 600; font-size: 1.125rem; display: flex; justify-content: space-between; align-items: center; user-select: none; padding: 1.75rem 2rem; color: var(--color-text); list-style: none; position: relative; transition: all 0.3s ease;">
+          <!-- Question Number Badge -->
+          <span style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.05)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 700; color: var(--color-primary); flex-shrink: 0;">{{inc @index}}</span>
+            <span>{{question}}</span>
+          </span>
+          <!-- Animated Icon -->
+          <span class="material-symbols-outlined" style="transition: transform 0.3s ease, color 0.3s; color: var(--color-primary); font-size: 28px;">expand_more</span>
+        </summary>
+        <div class="faq-answer" style="padding: 0 2rem 1.75rem 5rem; color: var(--color-muted); line-height: 1.8; font-size: 1rem;">
+          {{answer}}
+        </div>
+        <!-- Hover Gradient -->
+        <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(180deg, var(--color-primary), transparent); opacity: 0; transition: opacity 0.3s;"></div>
+      </details>
+      {{/each}}
+    </div>
+    
+    <!-- Still have questions CTA -->
+    <div style="text-align: center; margin-top: 4rem; padding: 2.5rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05)); border-radius: calc(var(--radius-lg) * 1px); border: 1px solid rgba(99, 102, 241, 0.1); animation: fadeInUp 0.6s ease-out 0.8s both;">
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Still have questions?</h3>
+      <p style="color: var(--color-muted); margin-bottom: 1.5rem;">Can't find the answer you're looking for? Our team is here to help.</p>
+      <a href="#contact" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; background: var(--color-primary); color: white; border-radius: calc(var(--radius-md) * 1px); font-weight: 600; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+        Contact Support
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.faq-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.faq-item:hover > div:last-child {
+  opacity: 1;
+}
+
+.faq-item[open] {
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15);
+}
+
+.faq-item[open] .faq-question {
+  color: var(--color-primary);
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faq-item[open] .faq-question .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+.faq-item[open] > div:last-child {
+  opacity: 1;
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .faq-question {
+    font-size: 1rem;
+    padding: 1.5rem 1.25rem;
+  }
+  
+  .faq-answer {
+    padding: 0 1.25rem 1.5rem 3.5rem;
+    font-size: 0.9375rem;
+  }
+}
+</style>
+
+<script>
+// Handlebars helper to increment index
+Handlebars.registerHelper('inc', function(value) {
+  return parseInt(value) + 1;
+});
+</script>

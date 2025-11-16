@@ -1,0 +1,42 @@
+<!-- Content Image Right Template -->
+<section class="content-image-right section" style="padding: 6rem 0; background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.03), transparent);">
+  <div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; animation: fadeInUp 0.6s ease-out;">
+      <!-- Content Left -->
+      <div>
+        <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1.5rem; background: linear-gradient(135deg, var(--color-text), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{heading}}</h2>
+        <p style="font-size: 1.125rem; color: var(--color-muted); line-height: 1.7; margin-bottom: 2rem;">{{description}}</p>
+        {{#if buttonText}}
+        <a href="{{buttonHref}}" class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-weight: 600; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3); transition: all 0.3s;">{{buttonText}}</a>
+        {{/if}}
+      </div>
+      
+      <!-- Image Right -->
+      <div style="position: relative; border-radius: calc(var(--radius-xl) * 1px); overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);">
+        <img src="{{imageUrl}}" alt="{{heading}}" style="width: 100%; height: auto; display: block; transition: transform 0.3s;">
+        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(99, 102, 241, 0.1));"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.content-image-right img:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .content-image-right > div > div {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  
+  .content-image-right > div > div > div:first-child {
+    order: 2;
+  }
+  
+  .content-image-right > div > div > div:last-child {
+    order: 1;
+  }
+}
+</style>
