@@ -197,25 +197,58 @@ ${componentsHTML}
   private renderTemplate(template: string, props: Record<string, any>): string {
     let result = template;
 
-    // Handle {{#each}} blocks
-    result = result.replace(/\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (match, arrayName, blockContent) => {
-      const array = props[arrayName];
-      if (!Array.isArray(array)) return '';
-      
-      return array.map(item => {
-        let itemHTML = blockContent;
-        // Replace {{this}} for primitives or {{property}} for objects
-        if (typeof item === 'string') {
-          itemHTML = itemHTML.replace(/\{\{this\}\}/g, this.security.sanitizeHtml(item));
-        } else {
-          Object.keys(item).forEach(key => {
-            const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
-            itemHTML = itemHTML.replace(regex, this.security.sanitizeHtml(String(item[key])));
+    // Handle {{#each}} blocks (process innermost first for nested arrays)
+    let prevResult = '';
+    while (prevResult !== result) {
+      prevResult = result;
+      result = result.replace(/\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (match, arrayName, blockContent) => {
+        const array = props[arrayName];
+        if (!Array.isArray(array)) return '';
+        
+        return array.map(item => {
+          let itemHTML = blockContent;
+          
+          // Handle nested {{#each}} blocks within this item
+          itemHTML = itemHTML.replace(/\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g, (_nestedMatch: string, nestedArrayName: string, nestedBlockContent: string) => {
+            const nestedArray = typeof item === 'object' ? item[nestedArrayName] : null;
+            if (!Array.isArray(nestedArray)) return '';
+            
+            return nestedArray.map(nestedItem => {
+              let nestedHTML = nestedBlockContent;
+              // Replace {{this}} for primitives
+              if (typeof nestedItem === 'string') {
+                nestedHTML = nestedHTML.replace(/\{\{this\}\}/g, this.security.sanitizeHtml(nestedItem));
+              } else if (typeof nestedItem === 'object') {
+                Object.keys(nestedItem).forEach(key => {
+                  const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+                  nestedHTML = nestedHTML.replace(regex, this.security.sanitizeHtml(String(nestedItem[key])));
+                });
+              }
+              return nestedHTML;
+            }).join('\n');
           });
-        }
-        return itemHTML;
-      }).join('\n');
-    });
+          
+          // Handle {{#if}} within items
+          itemHTML = itemHTML.replace(/\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (_ifMatch: string, propName: string, ifBlockContent: string) => {
+            return (typeof item === 'object' && item[propName]) ? ifBlockContent : '';
+          });
+          
+          // Replace {{this}} for primitives or {{property}} for objects
+          if (typeof item === 'string') {
+            itemHTML = itemHTML.replace(/\{\{this\}\}/g, this.security.sanitizeHtml(item));
+          } else if (typeof item === 'object') {
+            Object.keys(item).forEach(key => {
+              const value = item[key];
+              if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+                itemHTML = itemHTML.replace(regex, this.security.sanitizeHtml(String(value)));
+              }
+            });
+          }
+          return itemHTML;
+        }).join('\n');
+      });
+    }
 
     // Handle {{#if}} blocks
     result = result.replace(/\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (match, propName, blockContent) => {
