@@ -9,7 +9,21 @@ export type InputType =
   | 'color'
   | 'select'
   | 'boolean'
-  | 'number';
+  | 'number'
+  | 'array';
+
+/**
+ * Array Input Configuration
+ */
+export interface ArrayInputConfig {
+  itemLabel: string; // e.g., "Feature", "Plan", "FAQ"
+  fields: {
+    key: string;
+    label: string;
+    type: 'text' | 'textarea' | 'url' | 'icon';
+    placeholder?: string;
+  }[];
+}
 
 /**
  * Component Input Definition
@@ -20,6 +34,7 @@ export interface ComponentInput {
   label: string;
   helperText?: string;
   options?: { label: string; value: string }[];
+  arrayConfig?: ArrayInputConfig; // For array type inputs
 }
 
 /**

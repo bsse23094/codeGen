@@ -82,7 +82,19 @@ export class ComponentRegistryService {
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
         { key: 'subheading', type: 'textarea', label: 'Subheading' },
-        { key: 'items', type: 'textarea', label: 'Features (JSON)', helperText: 'Array of {icon, title, description}' }
+        { 
+          key: 'items', 
+          type: 'array', 
+          label: 'Features',
+          arrayConfig: {
+            itemLabel: 'Feature',
+            fields: [
+              { key: 'icon', type: 'icon', label: 'Icon', placeholder: 'flash_on' },
+              { key: 'title', type: 'text', label: 'Title', placeholder: 'Feature Title' },
+              { key: 'description', type: 'textarea', label: 'Description', placeholder: 'Feature description' }
+            ]
+          }
+        }
       ]
     },
 
@@ -251,7 +263,18 @@ export class ComponentRegistryService {
       },
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
-        { key: 'items', type: 'textarea', label: 'FAQ Items (JSON)', helperText: 'Array of {question, answer}' }
+        { 
+          key: 'items', 
+          type: 'array', 
+          label: 'FAQ Items',
+          arrayConfig: {
+            itemLabel: 'Question',
+            fields: [
+              { key: 'question', type: 'text', label: 'Question', placeholder: 'Your question here' },
+              { key: 'answer', type: 'textarea', label: 'Answer', placeholder: 'Detailed answer' }
+            ]
+          }
+        }
       ]
     },
 
@@ -331,7 +354,20 @@ export class ComponentRegistryService {
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
         { key: 'subheading', type: 'textarea', label: 'Subheading' },
-        { key: 'testimonials', type: 'textarea', label: 'Testimonials (JSON)', helperText: 'Array of {quote, author, role, avatar}' }
+        { 
+          key: 'testimonials', 
+          type: 'array', 
+          label: 'Testimonials',
+          arrayConfig: {
+            itemLabel: 'Testimonial',
+            fields: [
+              { key: 'quote', type: 'textarea', label: 'Quote', placeholder: 'Customer testimonial' },
+              { key: 'author', type: 'text', label: 'Author Name', placeholder: 'John Doe' },
+              { key: 'role', type: 'text', label: 'Role/Company', placeholder: 'CEO, Company' },
+              { key: 'avatar', type: 'url', label: 'Avatar URL', placeholder: 'https://...' }
+            ]
+          }
+        }
       ]
     },
 
@@ -352,7 +388,18 @@ export class ComponentRegistryService {
       },
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
-        { key: 'stats', type: 'textarea', label: 'Stats (JSON)', helperText: 'Array of {value, label}' }
+        { 
+          key: 'stats', 
+          type: 'array', 
+          label: 'Statistics',
+          arrayConfig: {
+            itemLabel: 'Stat',
+            fields: [
+              { key: 'value', type: 'text', label: 'Value', placeholder: '10K+' },
+              { key: 'label', type: 'text', label: 'Label', placeholder: 'Active Users' }
+            ]
+          }
+        }
       ]
     },
 
@@ -375,7 +422,18 @@ export class ComponentRegistryService {
       },
       inputs: [
         { key: 'heading', type: 'text', label: 'Heading' },
-        { key: 'logos', type: 'textarea', label: 'Logos (JSON)', helperText: 'Array of {name, url}' }
+        { 
+          key: 'logos', 
+          type: 'array', 
+          label: 'Company Logos',
+          arrayConfig: {
+            itemLabel: 'Logo',
+            fields: [
+              { key: 'name', type: 'text', label: 'Company Name', placeholder: 'Acme Corp' },
+              { key: 'url', type: 'url', label: 'Logo URL', placeholder: 'https://...' }
+            ]
+          }
+        }
       ]
     },
 

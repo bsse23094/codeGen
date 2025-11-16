@@ -59,22 +59,22 @@ export class ThemeService {
     {
       id: 'retro',
       name: 'Retro',
-      description: 'Warm vintage-inspired theme',
+      description: 'Warm vintage-inspired theme with elegant typography',
       tokens: {
-        colorPrimary: '#ff6b6b',
-        colorPrimarySoft: '#ffe3be',
-        colorBackground: '#fff7e6',
+        colorPrimary: '#d97706',
+        colorPrimarySoft: '#fef3c7',
+        colorBackground: '#fef8f0',
         colorSurface: '#ffffff',
-        colorText: '#1e293b',
-        colorMuted: '#64748b',
-        borderRadius: '0.5rem',
-        shadowSoft: '0 8px 30px rgba(0, 0, 0, 0.12)',
-        fontHeading: "'Space Grotesk', sans-serif",
-        fontBody: "'Work Sans', sans-serif",
-        logo: 'preset:star-burst',
-        logoSize: '44px',
-        spacing: '1.5rem',
-        animationSpeed: '0.5s'
+        colorText: '#292524',
+        colorMuted: '#78716c',
+        borderRadius: '0.75rem',
+        shadowSoft: '0 10px 40px rgba(217, 119, 6, 0.15)',
+        fontHeading: "'Playfair Display', serif",
+        fontBody: "'Lora', serif",
+        logo: 'preset:crown-premium',
+        logoSize: '42px',
+        spacing: '1.25rem',
+        animationSpeed: '0.4s'
       }
     },
     {
